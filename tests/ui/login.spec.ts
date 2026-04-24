@@ -1,16 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../../pages/LoginPage";
 
 test(
   "Login successfully",
   { tag: ["@smoke", "@login", "@regression", "@sanity"] },
   async ({ page }) => {
-    await page.goto("/login");
-    await page.getByRole("textbox", { name: "Username" }).fill("practice");
-    await page
-      .getByRole("textbox", { name: "Password" })
-      .fill("SuperSecretPassword!");
-    await page.getByRole("button", { name: "Login" }).click();
+    const loginPage = new LoginPage(page);
 
-    await expect(page.locator("#flash")).toBeVisible();
+    await loginPage.goto();
+    await loginPage.login("practice", "SuperSecretPassword!");
+
+    await expect(loginPage.flashMessage).toBeVisible();
   },
 );
